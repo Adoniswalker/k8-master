@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment                                          # 1
+metadata:
+  name: {{ .Values.sa_web_app.name }}
+  labels:
+    app: {{ .Values.sa_web_app.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.sa_web_app.name }}
+  replicas: {{ .Values.sa_web_app.replicaCount}}                                             # 2
+  minReadySeconds: {{ .Values.sa_web_app.minReadySeconds}}
+  strategy:
+    type: RollingUpdate                                   # 3
+    rollingUpdate:
+      maxUnavailable: {{ .Values.sa_web_app.maxUnavailable}}                                 # 4
+      maxSurge: {{ .Values.sa_web_app.maxSurge}}                                     # 5
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.sa_web_app.name }}                                  # 6
+    spec:
+      containers:
+      - image: {{ .Values.sa_web_app.image }}
+        imagePullPolicy: Always
+        name: {{ .Values.sa_web_app.name }}
+        env:
+          - name: SA_LOGIC_API_URL
+            value: {{ .Values.sa_web_app.env.SA_LOGIC_API_URL }}
+        ports:
+          - containerPort: {{ .Values.sa_web_app.containerPort }}

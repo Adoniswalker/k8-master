@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment                                          # 1
+metadata:
+  name: {{ .Values.front_end.name }}
+  labels:
+    app: {{ .Values.front_end.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.front_end.name }}
+  replicas: {{ .Values.front_end.replicaCount }}                                             # 2
+  minReadySeconds: {{ .Values.front_end.minReadySeconds }}
+  strategy:
+    type: RollingUpdate                                   # 3
+    rollingUpdate: 
+      maxUnavailable: {{ .Values.front_end.maxUnavailable}}                                 # 4
+      maxSurge: {{ .Values.front_end.maxSurge}}                                     # 5
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.front_end.name }}                                  # 6
+    spec:
+      containers:
+        - image: {{ .Values.front_end.image }}
+          imagePullPolicy: Always                         # 7
+          name: {{ .Values.front_end.name }}
+          ports:
+            - containerPort: {{ .Values.front_end.containerPort }}

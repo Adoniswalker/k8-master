@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.sa_logic.name }}
+spec:
+  ports:
+    - port:  {{ .Values.sa_logic.service.port }}
+      protocol: TCP
+      targetPort:  {{ .Values.sa_logic.containerPort }}
+  selector:
+    app: {{ .Values.sa_logic.name}}

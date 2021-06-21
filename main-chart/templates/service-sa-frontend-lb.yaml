@@ -5,8 +5,8 @@ metadata:
 spec:
   type: LoadBalancer       # 2
   ports:
-  - port: 80               # 3
+  - port: {{ .Values.front_end.containerPort }}               # 3
     protocol: TCP          # 4
-    targetPort: 80         # 5
+    targetPort: {{ .Values.front_end.containerPort }}         # 5
   selector:                # 6
-    app: sa-frontend       # 7
+    app: {{ .Values.front_end.name }}       # 7

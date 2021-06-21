@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment                                          # 1
+metadata:
+  name: {{ .Values.sa_logic.name }}
+  labels:
+    app: {{ .Values.sa_logic.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.sa_logic.name }}
+  replicas: {{ .Values.sa_logic.replicaCount}}                                             # 2
+  minReadySeconds: {{ .Values.sa_logic.minReadySeconds}}
+  strategy:
+    type: RollingUpdate                                   # 3
+    rollingUpdate:
+      maxUnavailable: {{ .Values.sa_logic.maxUnavailable}}                                 # 4
+      maxSurge: {{ .Values.sa_logic.maxSurge}}                                     # 5
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.sa_logic.name }}                                  # 6
+    spec:
+      containers:
+        - image: {{ .Values.sa_logic.image }}
+          imagePullPolicy: Always                         # 7
+          name: {{ .Values.sa_logic.name }}
+          ports:
+            - containerPort: {{ .Values.sa_logic.containerPort }}
